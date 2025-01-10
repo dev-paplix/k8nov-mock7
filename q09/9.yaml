@@ -1,0 +1,88 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: app-storage
+provisioner: rancher.io/local-path
+parameters:
+  type: pd-standard
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: app-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: app-storage
+  hostPath:
+    path: "/mnt/app-data"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-pvc
+spec:
+  storageClassName: app-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: app-deployment
+  name: app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-deployment
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: app-deployment
+    spec:
+      containers:
+        - image: httpd:2.4
+          name: httpd
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/apache2/htdocs
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: app-pvc
+      nodeSelector:
+        disk: ssd
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  selector:
+    app: app-deployment
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30080
+  type: NodePort

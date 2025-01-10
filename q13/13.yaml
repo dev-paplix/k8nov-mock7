@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: resource-deploy
+  name: resource-deploy
+  namespace: resource-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: resource-deploy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: resource-deploy
+    spec:
+      containers:
+        - image: nginx:1.23
+          name: nginx
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+status: {}

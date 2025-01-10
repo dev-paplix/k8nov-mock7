@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: web-deployment
+  name: web-deployment
+  namespace: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: web-deployment
+    spec:
+      containers:
+        - image: nginx:1.21
+          name: nginx
+          ports:
+            - containerPort: 80
+          resources: {}
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+  namespace: production
+spec:
+  selector:
+    app: web-deployment
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

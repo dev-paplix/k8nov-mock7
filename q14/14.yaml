@@ -1,0 +1,49 @@
+apiVersion: v1
+data:
+  APP_DEBUG: "false"
+  APP_ENV: production
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: app-config
+
+---
+apiVersion: v1
+data:
+  DB_PASSWORD: cGFzc3dvcmQxMjM=
+  DB_USER: YWRtaW4=
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: app-secret
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: config-secret-deploy
+  name: config-secret-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-secret-deploy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: config-secret-deploy
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secret
+          resources: {}
+status: {}

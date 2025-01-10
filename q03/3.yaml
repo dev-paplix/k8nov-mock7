@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: frontend-deployment
+  name: frontend-deployment
+  namespace: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend-deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: frontend-deployment
+    spec:
+      containers:
+        - image: nginx:latest
+          name: nginx
+          resources: {}
+status: {}
+
+---
+kubectl set image deployment.apps/frontend-deployment nginx=image:nginx:1.23 -n test
+kubectl scale --replicas=4 deployment.apps/frontend-deployment -n test
+kubectl edit service/frontend-service -n test
