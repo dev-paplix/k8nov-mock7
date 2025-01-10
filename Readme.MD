@@ -1,4 +1,4 @@
-Name: 
+Name: Azry Syafiqah
 
 Question 1:
 You are tasked with deploying an application in the production namespace.
@@ -80,7 +80,7 @@ Verify that the service is accessible on its ClusterIP by running a curl command
 
 Save the debug commands and explanations as troubleshooting-notes.md.
 
-
+stor
 Question 4:
 You are required to configure dynamic provisioning of storage in a Kubernetes cluster.
 

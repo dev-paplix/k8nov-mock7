@@ -1,0 +1,31 @@
+kind: Deployment
+metadata:
+  name: critical-app
+  labels:
+    app: busybox
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox   
+    spec:
+      containers:
+      - name: busybox 
+        image: busybox:latest
+        command: ['sh', '-c', 'echo "Hello, Kubernetes!" && sleep 3600']
+      nodeSelector:
+        env: production
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "critical"
+        effect: "NoSchedule"
+
+---
+
+kubectl taint nodes node01 dedicated=critical:NoSchedule
+kubectl label nodes node01 env=production
