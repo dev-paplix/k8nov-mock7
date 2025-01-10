@@ -1,0 +1,24 @@
+ammar@LOKI:~$ k get service
+NAME              TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+backend-service   NodePort    10.110.243.154   <none>        5000:30080/TCP   6s
+
+###
+# backend-ingress.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backend-ingress
+spec:
+  rules:
+  - host: "backend.example.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/api"
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 5000
+
