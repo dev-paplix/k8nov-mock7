@@ -1,0 +1,89 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-storage
+provisioner: rancher.io/local-path
+parameters:
+  type: pd-standard
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: db-pv
+spec:
+  capacity:
+    storage: 20Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: fast-storage
+  hostPath:
+    path: "/mnt/data"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+spec:
+  storageClassName: fast-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: null
+  labels:
+    app: db-statefulset
+  name: db-statefulset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: db-statefulset
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: db-statefulset
+    spec:
+      containers:
+        - image: postgres:14
+          name: postgres
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: data
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "password"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: db-pvc
+status: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+spec:
+  clusterIP: "None"
+  selector:
+    app: db-statefulset
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
