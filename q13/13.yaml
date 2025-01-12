@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-deploy
+  namespace: resource-test
+  labels:
+    app: resource-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: resource-deploy
+  template:
+    metadata:
+      labels:
+        app: resource-deploy
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
