@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: critical-app    
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: critical-app
+  template:
+    metadata:
+      labels:
+        app: critical-app
+    spec:
+      containers:
+      - name: busybox
+        image: busybox     
+        command: ["sleep", "3600"]
+      nodeSelector:
+        env: production
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "critical"
+        effect: "NoSchedule"

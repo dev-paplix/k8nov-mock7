@@ -1,38 +1,3 @@
-Name: 
-
-Question 1:
-You are tasked with deploying an application in the production namespace.
-
-Create a deployment named web-deployment with the following specifications:
-
-Image: nginx:1.21
-3 replicas
-Container port: 80
-Expose the deployment using a ClusterIP service named web-service.
-
-Target port: 80
-Service port: 8080
-Save the resulting manifests as deployment-service.yaml.
-
-
-Question 2:
-You need to set up a service and ingress for a backend application.
-
-Create a deployment named backend in the default namespace with the following specifications:
-
-Image: python:3.10-slim
-2 replicas
-Container port: 5000
-Expose the deployment via a NodePort service named backend-service on port 30080.
-
-Configure an ingress resource named backend-ingress to route traffic to the backend-service using the following rules:
-
-Host: backend.example.com
-Path: /api
-Save all the resource manifests as backend-ingress.yaml.
-
-
-
 Here are three Certified Kubernetes Administrator (CKA)-style exam questions covering deployments, services, and ingress:
 
 Question 1: Deployments and Services

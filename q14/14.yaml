@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-secret-deployment
+  labels:
+    app: config-secret-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-secret-deployment
+  template:
+    metadata:
+      labels:
+        app: config-secret-deployment
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        env:
+        - name: APP_ENV        
+          valueFrom:
+            configMapKeyRef:
+              name: app-config  
+              key: APP_ENV         
+        - name: APP_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_DEBUG
+        - name: DB_USER 
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: DB_PASSWORD
