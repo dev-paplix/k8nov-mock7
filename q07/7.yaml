@@ -1,0 +1,32 @@
+# kubectl label nodes node01 env=production
+# kubectl taint nodes node011 dedicated=critical:NoSchedule
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: critical-app
+  labels:
+    app: busybox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+        - name: busybox
+          image: busybox:1.28
+          ports:
+            - containerPort: 80
+          command: ["sh", "-c", "sleep 3600"]
+      nodeSelector:
+        env: production
+      tolerations:
+        - key: "dedicated"
+          operator: "Equal"
+          value: "critical"
+          effect: "NoSchedule"
