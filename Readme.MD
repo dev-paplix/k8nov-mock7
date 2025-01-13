@@ -1,4 +1,116 @@
+Name: 
 
+Question 1:
+You are tasked with deploying an application in the production namespace.
+
+Create a deployment named web-deployment with the following specifications:
+
+Image: nginx:1.21
+3 replicas
+Container port: 80
+Expose the deployment using a ClusterIP service named web-service.
+
+Target port: 80
+Service port: 8080
+Save the resulting manifests as deployment-service.yaml.
+
+
+Question 2:
+You need to set up a service and ingress for a backend application.
+
+Create a deployment named backend in the default namespace with the following specifications:
+
+Image: python:3.10-slim
+2 replicas
+Container port: 5000
+Expose the deployment via a NodePort service named backend-service on port 30080.
+
+Configure an ingress resource named backend-ingress to route traffic to the backend-service using the following rules:
+
+Host: backend.example.com
+Path: /api
+Save all the resource manifests as backend-ingress.yaml.
+
+
+
+Here are three Certified Kubernetes Administrator (CKA)-style exam questions covering deployments, services, and ingress:
+
+Question 1: Deployments and Services
+You are tasked with deploying an application in the production namespace.
+
+Create a deployment named web-deployment with the following specifications:
+
+Image: nginx:1.21
+3 replicas
+Container port: 80
+Expose the deployment using a ClusterIP service named web-service.
+
+Target port: 80
+Service port: 8080
+Save the resulting manifests as deployment-service.yaml.
+
+Question 2: Services and Ingress
+You need to set up a service and ingress for a backend application.
+
+Create a deployment named backend in the default namespace with the following specifications:
+
+Image: python:3.10-slim
+2 replicas
+Container port: 5000
+Expose the deployment via a NodePort service named backend-service on port 30080.
+
+Configure an ingress resource named backend-ingress to route traffic to the backend-service using the following rules:
+
+Host: backend.example.com
+Path: /api
+Save all the resource manifests as backend-ingress.yaml.
+
+
+Question 3:
+You are troubleshooting a misconfigured application in the test namespace.
+
+There is a deployment named frontend-deployment with 2 replicas that uses the image nginx:latest.
+
+Update the deployment to use the image nginx:1.23 and scale it to 4 replicas.
+The deployment is exposed via a service named frontend-service of type ClusterIP.
+
+The service's target port is incorrectly set to 8080.
+Update the target port to 80 without recreating the service.
+Verify that the service is accessible on its ClusterIP by running a curl command from a debug pod in the same namespace.
+
+Save the debug commands and explanations as troubleshooting-notes.md.
+
+
+Question 4:
+You are required to configure dynamic provisioning of storage in a Kubernetes cluster.
+
+Create a StorageClass named fast-storage with the following specifications:
+
+
+Parameters:
+type: gp2
+Reclaim policy: Delete
+Create a PersistentVolume named pv-data with the following specifications:
+
+Capacity: 10Gi
+Access modes: ReadWriteOnce
+StorageClass: fast-storage
+HostPath: /mnt/data
+Save the configuration as storageclass-pv.yaml.
+
+Question 5:
+You are tasked with deploying an application that uses a PersistentVolumeClaim for storage.
+
+Create a PersistentVolumeClaim named app-pvc in the default namespace with the following specifications:
+
+Storage request: 5Gi
+Access mode: ReadWriteOnce
+StorageClass: standard
+Create a deployment named app-deployment that uses the PVC with the following details:
+
+Image: nginx:1.21
+Mount the PVC to /usr/share/nginx/html inside the container.
+Save the configuration as pvc-deployment.yaml.
 
 Question 6:
 You are troubleshooting a volume issue in the test namespace.
@@ -11,22 +123,23 @@ After fixing the issue, confirm that the pod successfully mounts the volume by r
 
 Save the troubleshooting steps and commands as volume-troubleshooting-notes.md.
 
+Question 7:
+You need to deploy an application on a specific group of nodes with taints applied.
 
+Label a node with the key-value pair env=production.
 
+Use the kubectl label command to apply the label.
+Taint the same node with the key dedicated and value critical.
 
+Taint: dedicated=critical:NoSchedule
+Create a deployment named critical-app with the following specifications:
 
-
-
-
-
-
-
-
-
-
-
-
-
+Image: busybox
+Replica: 1
+Command: ["sleep", "3600"]
+Add a node selector to schedule the pod on nodes labeled env=production.
+Add tolerations to allow the pod to run on tainted nodes.
+Save the configuration as taint-toleration-deployment.yaml.
 
 
 Here are three CKA-style exam questions involving StatefulSet, Deployment, Services, StorageClass, PersistentVolume, PersistentVolumeClaim, and Ingress:
@@ -51,18 +164,27 @@ Expose the StatefulSet with a headless service named db-service.
 Service port: 5432.
 Save the configuration as statefulset-storage.yaml.
 
+Question 9:
+You need to set up a PersistentVolume for an application and restrict its scheduling to specific nodes.
 
+Create a PersistentVolume named app-pv with the following specifications:
 
+Capacity: 10Gi.
+Access modes: ReadWriteOnce.
+HostPath: /mnt/app-data.
+Create a PersistentVolumeClaim named app-pvc with the following specifications:
 
+Storage request: 10Gi.
+Access mode: ReadWriteOnce.
+Create a Deployment named app-deployment with the following specifications:
 
+Image: httpd:2.4.
+2 replicas.
+Mount the app-pvc to /usr/local/apache2/htdocs inside the container.
+Add a node selector to ensure the pods are scheduled only on nodes labeled disk=ssd.
+Expose the deployment using a NodePort service named app-service on port 30080.
 
-
-
-
-
-
-
-
+Save the configuration as persistentvolume-deployment.yaml.
 
 Question 10:
 
@@ -71,20 +193,6 @@ You need to upgrade your Kubernetes cluster from version the current version to 
 Task:
 
 Upgrade the Kubernetes control plane to version 1.31.1. Upgrade the worker nodes to version 1.31.1 while minimizing downtime.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 Question 11: Pod Affinity and Anti-Affinity
