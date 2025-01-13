@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: null
+  labels:
+    app: db-statefulset
+  name: db-statefulset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: db-statefulset
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: db-statefulset
+    spec:
+      containers:
+      - image: postgres:14
+        name: postgres
+
+  volumeClaimTemplates:
+  - metadata:
+      name: pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "fast-storage"
+      resources:
+        requests:
+          storage: 5Gi
+
+status: {}
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-storage
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+spec:
+  selector:
+    app: db-statefulset
+  ports:
+    - protocol: TCP
+      port: 5432
+  clusterIP: None
