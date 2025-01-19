@@ -1,0 +1,30 @@
+apt install etcd-client
+
+export ETCDCTL_API=3
+
+etcdctl --endpoints https://127.0.0.1:2379 \
+> --cert=/etc/kubernetes/pki/etcd/server.crt \
+> --key=/etc/kubernetes/pki/etcd/server.key \
+> --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+> snapshot save etcd-backup.db
+
+etcdctl snapshot restore etcd-backup.db
+
+mkdir temp_yaml_files
+
+mv /etc/kubernetes/manifests/* temp_yaml_files/
+
+cd default.etcd/
+
+mv /var/lib/etcd/member/ /var/lib/etcd/member.bak
+
+mv member/ /var/lib/etcd/
+
+systemctl stop kubelet
+
+cd ..
+
+mv temp_yaml_files/* /etc/kubernetes/manifests/
+
+systemctl start kubelet
+
